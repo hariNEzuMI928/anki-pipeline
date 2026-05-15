@@ -2,6 +2,7 @@
 
 import datetime
 import logging
+import zoneinfo
 from typing import Any
 
 from apyanki.anki import Anki
@@ -47,7 +48,7 @@ def get_density_stats(a: Anki, start_date: datetime.datetime) -> list[dict[str, 
 
 def get_daily_study_time(a: Anki) -> list[dict[str, Any]]:
     """Daily minutes studied last 30 days."""
-    tz = datetime.timezone.utc  # will convert to local
+    tz = zoneinfo.ZoneInfo("Europe/Warsaw")
     now = datetime.datetime.now(tz)
     start_date = now - datetime.timedelta(days=30)
     start_ms = int(start_date.timestamp() * 1000)
