@@ -1,0 +1,8 @@
+{
+  "favorites_container": "div[class*='saved-item'], div[class*='savedItem'], div[jsname='yAaxRc']",
+  "empty_state_indicator": "div[class*='empty'], div[class*='no-results']",
+  "favorite_item": "div[class*='saved-item'], div[class*='savedItem'], div[jsname='yAaxRc']",
+  "favorite_item_text": "div[class*='source-text'], span[class*='sourceText']",
+  "favorite_item_translation": "div[class*='target-text'], span[class*='targetText']",
+  "favorite_item_delete_button": "button[class*='delete'], div[class*='delete'], button[aria-label*='delete']"
+}

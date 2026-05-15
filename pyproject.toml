@@ -1,0 +1,21 @@
+[project]
+name = "anki-pipeline"
+version = "0.1.0"
+description = "Unified Anki infrastructure: density tracking + GTrans card creation"
+requires-python = ">=3.12"
+dependencies = [
+    "apyanki>=0.19",
+    "gspread>=6.0",
+    "google-auth>=2.0",
+    "slack-sdk>=3.0",
+    "python-dotenv>=1.0",
+    "google-genai>=1.0",
+    "playwright>=1.40",
+    "requests>=2.0",
+]
+
+[project.scripts]
+anki-pipeline = "anki_pipeline.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
