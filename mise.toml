@@ -7,3 +7,23 @@ PYTHONPATH = "src"
 [tasks.run-all]
 description = "Run the complete anki pipeline (density tracking + GTrans card creation)"
 run = ".venv/bin/python -m anki_pipeline run-all"
+
+[tasks.run-density]
+description = "Density tracking only (read → Sheets/Slack)"
+run = ".venv/bin/python -m anki_pipeline run-density"
+
+[tasks.run-gtrans]
+description = "GTrans only (fetch favorites → create cards)"
+run = ".venv/bin/python -m anki_pipeline run-gtrans"
+
+[tasks.check-new]
+description = "Count new GTrans items (lightweight, no Anki launch)"
+run = ".venv/bin/python -m anki_pipeline check-new"
+
+[tasks.manual-login]
+description = "Re-authenticate Google Translate session"
+run = ".venv/bin/python -m anki_pipeline manual-login"
+
+[tasks.sync-only]
+description = "Just sync Anki collection"
+run = ".venv/bin/python -m anki_pipeline sync-only"
