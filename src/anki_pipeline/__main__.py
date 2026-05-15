@@ -75,50 +75,46 @@ def cmd_gtrans(args):
     # 1. Close Anki + sync
     was_running, a = ensure_synced_env()
 
-    try:
-        # 2. Fetch favorites
-        ensure_logged_in(manual_login=args.manual_login)
-        favorites = fetch_favorites(limit=args.limit)
-        if not favorites:
-            logger.info("No new favorites to process.")
-            return 0
+    # 2. Fetch favorites
+    ensure_logged_in(manual_login=args.manual_login)
+    favorites = fetch_favorites(limit=args.limit)
+    if not favorites:
+        logger.info("No new favorites to process.")
+        return 0
 
-        # 3. Filter already-processed
-        processed = load_ids(config.PROCESSED_IDS_PATH)
-        new_faves = [f for f in favorites if f.item_id not in processed]
+    # 3. Filter already-processed
+    processed = load_ids(config.PROCESSED_IDS_PATH)
+    new_faves = [f for f in favorites if f.item_id not in processed]
 
-        if not new_faves:
-            logger.info("All favorites already processed.")
-            return 0
+    if not new_faves:
+        logger.info("All favorites already processed.")
+        return 0
 
-        # 4. Gemini processing
-        proc = GeminiProcessor()
-        ensure_models_and_decks(a)
+    # 4. Gemini processing
+    proc = GeminiProcessor()
+    ensure_models_and_decks(a)
 
-        added_ids = set()
-        for item in new_faves:
-            result = proc.process_item(item)
-            if result is None:
-                continue
-            if isinstance(result.data, ProcessedWord):
-                note_id = add_word_note(a, result.data)
-            else:
-                note_id = add_sentence_note(a, result.data)
-            if note_id is not None:
-                added_ids.add(item.item_id)
+    added_ids = set()
+    for item in new_faves:
+        result = proc.process_item(item)
+        if result is None:
+            continue
+        if isinstance(result.data, ProcessedWord):
+            note_id = add_word_note(a, result.data)
+        else:
+            note_id = add_sentence_note(a, result.data)
+        if note_id is not None:
+            added_ids.add(item.item_id)
 
-        # 5. Persist processed IDs
-        processed |= added_ids
-        save_ids(config.PROCESSED_IDS_PATH, processed)
+    # 5. Persist processed IDs
+    processed |= added_ids
+    save_ids(config.PROCESSED_IDS_PATH, processed)
 
-        # 6. Delete processed items from Google Translate
-        if not args.skip_delete and added_ids:
-            items_to_delete = [f for f in new_faves if f.item_id in added_ids]
-            deleted = delete_favorite_items(items_to_delete)
-            logger.info("Deleted %d items from Google Translate.", deleted)
-
-    finally:
-        a.close()
+    # 6. Delete processed items from Google Translate
+    if not args.skip_delete and added_ids:
+        items_to_delete = [f for f in new_faves if f.item_id in added_ids]
+        deleted = delete_favorite_items(items_to_delete)
+        logger.info("Deleted %d items from Google Translate.", deleted)
 
     # Re-sync if Anki was originally running
     if was_running:
@@ -170,7 +166,6 @@ def cmd_manual_login(args):
 def cmd_sync_only(args):
     from .sync import ensure_synced_env
     _, a = ensure_synced_env()
-    a.close()
     return 0
 
 
