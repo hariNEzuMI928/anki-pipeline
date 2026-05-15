@@ -1,8 +1,22 @@
 {
-  "favorites_container": "div[class*='saved-item'], div[class*='savedItem'], div[jsname='yAaxRc']",
-  "empty_state_indicator": "div[class*='empty'], div[class*='no-results']",
-  "favorite_item": "div[class*='saved-item'], div[class*='savedItem'], div[jsname='yAaxRc']",
-  "favorite_item_text": "div[class*='source-text'], span[class*='sourceText']",
-  "favorite_item_translation": "div[class*='target-text'], span[class*='targetText']",
-  "favorite_item_delete_button": "button[class*='delete'], div[class*='delete'], button[aria-label*='delete']"
+  "//": "このファイルは、Google翻訳お気に入りページのHTML構造に対応するCSSセレクタを定義します。",
+  "//": "調査日: 2025-08-14",
+
+  "empty_state_indicator": "a[href*='p=phrasebook_web_help']",
+  "//": "役割: お気に入りが1件もない場合に表示される『詳細』ヘルプリンク。これが見つかれば、そのページには処理対象のお気に入りカードが存在しない（＝新規登録なし）と判断できる。",
+
+  "favorites_container": "c-wiz[jscontroller='XkGvxf']",
+  "//": "役割: ログイン後、ページが完全にロードされたことを示すセレクタ。お気に入りコンテナ自体を使用。",
+
+  "favorite_item": "li[data-id]",
+  "//": "役割: 個々のお気に入り項目（カード）全体。スクリプトはこの要素を全て見つけ出し、ループ処理します。",
+
+  "favorite_item_text": "div[jsname='eTqL4e']",
+  "//": "役割: カード内の『原文』ブロック全体。この要素のテキストを全て取得します。",
+
+  "favorite_item_translation": "span[jsname='WHdkge']",
+  "//": "役割: カード内の『翻訳文』ブロック全体。この要素のテキストを全て取得します。",
+
+  "favorite_item_delete_button": "button[jsname='UsVyAb']",
+  "//": "役割: カード内の『[保存済み] から削除』ボタン"
 }

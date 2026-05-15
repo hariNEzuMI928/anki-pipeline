@@ -85,6 +85,9 @@ def notify_progress(counts: dict[str, dict[str, int]]) -> None:
     logger.info("Sending Slack notification:\n%s", full_message)
 
     payload = {"text": full_message}
-    resp = requests.post(config.SLACK_WEBHOOK_URL, json=payload, timeout=15)
-    resp.raise_for_status()
-    logger.info("Slack notification sent (status: %s)", resp.status_code)
+    try:
+        resp = requests.post(config.SLACK_WEBHOOK_URL, json=payload, timeout=10)
+        resp.raise_for_status()
+        logger.info("Slack notification sent (status: %s)", resp.status_code)
+    except Exception as e:
+        logger.error("Error sending Slack notification: %s", e)

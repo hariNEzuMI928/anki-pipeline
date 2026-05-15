@@ -1,0 +1,9 @@
+[tools]
+python = "3.12"
+
+[env]
+PYTHONPATH = "src"
+
+[tasks.run-all]
+description = "Run the complete anki pipeline (density tracking + GTrans card creation)"
+run = ".venv/bin/python -m anki_pipeline run-all"

@@ -12,6 +12,7 @@ Subcommands:
 import argparse
 import logging
 import sys
+from logging.handlers import RotatingFileHandler
 
 from . import config
 from .sync import close_anki, is_running, sync, open_anki_collection, ensure_synced_env
@@ -21,10 +22,23 @@ logger = logging.getLogger("anki-pipeline")
 
 
 def setup_logging():
-    logging.basicConfig(
-        level=getattr(logging, config.LOG_LEVEL, logging.INFO),
-        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    )
+    log_format = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+    level = getattr(logging, config.LOG_LEVEL, logging.INFO)
+
+    # Console handler
+    stream = logging.StreamHandler()
+    stream.setFormatter(logging.Formatter(log_format))
+
+    # File handler (rotating)
+    log_path = config.LOGS_DIR / "anki-pipeline.log"
+    config.LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    file_handler = RotatingFileHandler(str(log_path), maxBytes=1_000_000, backupCount=3)
+    file_handler.setFormatter(logging.Formatter(log_format))
+
+    root = logging.getLogger()
+    root.setLevel(level)
+    root.addHandler(stream)
+    root.addHandler(file_handler)
 
 
 # ── Density subcommand ──────────────────────────────
@@ -84,7 +98,13 @@ def cmd_gtrans(args):
 
     # 3. Filter already-processed
     processed = load_ids(config.PROCESSED_IDS_PATH)
+    stale_faves = [f for f in favorites if f.item_id in processed]
     new_faves = [f for f in favorites if f.item_id not in processed]
+
+    # Clean up stale items from Google Translate (already processed in past runs)
+    if stale_faves and not args.skip_delete:
+        deleted = delete_favorite_items(stale_faves)
+        logger.info("Cleaned up %d stale items from Google Translate.", deleted)
 
     if not new_faves:
         logger.info("All favorites already processed.")
